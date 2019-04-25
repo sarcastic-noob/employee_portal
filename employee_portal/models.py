@@ -11,9 +11,15 @@ class department(models.Model):
     dept_id=models.IntegerField(primary_key=True)
     dept_name=models.CharField(max_length=25)
     dept_type=models.CharField(max_length=25)
-
     def __str__(self):
    	    return self.dept_name
+
+
+class type(models.Model):
+    type_id=models.IntegerField(primary_key=True)
+    type_name=models.CharField(max_length=25)
+    def __str__(self):
+   	    return self.type_name
 
 
 class roles(models.Model) :
@@ -28,14 +34,14 @@ class employees(models.Model) :
     name=models.CharField(max_length=40)
     dept_id=models.ForeignKey(department,on_delete=models.CASCADE)
     role_id=models.ForeignKey(roles, on_delete=models.CASCADE)
-    type=models.CharField(max_length=40)
+    type=models.ForeignKey(type, on_delete=models.CASCADE)
     join_date=models.DateTimeField(auto_now=True)
     leaves_this_year=models.IntegerField()
     leaves_next_year=models.IntegerField()
     password=models.CharField(max_length=50,default="abcdefgh")
     employee_email=models.CharField(max_length=100, default="")
     def __str__(self):
-        return self.name
+        return self.employee_id
 
 
 
@@ -52,7 +58,7 @@ class department_roles(models.Model):
 
 class bonus_request(models.Model):
     role_id=models.ForeignKey(roles,on_delete=models.CASCADE)
-    type=models.ForeignKey(employees, on_delete=models.CASCADE)
+    type=models.ForeignKey(type, on_delete=models.CASCADE)
     month_year=models.CharField(max_length=25)
     bonus=models.DecimalField(decimal_places=3,max_digits = 5)
     status=models.CharField(max_length=10)
@@ -61,14 +67,14 @@ class bonus_request(models.Model):
 
 
 class cfti_matrix(models.Model):
-    type=models.ForeignKey(employees, on_delete=models.CASCADE)
+    type=models.ForeignKey(type, on_delete=models.CASCADE)
     role_id=models.ForeignKey(roles, on_delete=models.CASCADE)
     years_of_experience=models.IntegerField()
     pay=models.IntegerField()
     class Meta:
             unique_together=('type','years_of_experience')
     def __str__(self):
-            return self.pay
+            return str(self.pay)
 
 
 class leave_request(models.Model):

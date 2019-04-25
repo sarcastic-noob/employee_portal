@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import*
 
 admin.site.register(department)
+admin.site.register(type)
 admin.site.register(roles)
 admin.site.register(employees)
 admin.site.register(department_roles)
