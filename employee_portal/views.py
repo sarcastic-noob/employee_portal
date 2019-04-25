@@ -18,7 +18,7 @@ def index(request):
     template = loader.get_template('emp/login.html')
     context = {}
     if request.session.has_key('employee_id'):
-        return home(request)
+        return redirect('/employee_portal/home')
     return HttpResponse(template.render(context,request))
 
 

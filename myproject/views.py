@@ -10,5 +10,3 @@ def index(request):
 	context = {}
 	if request.session.has_key('employee_id'):
 		return redirect('/employee_portal/home')
-
-	return HttpResponse(template.render(context,request))
