@@ -1,0 +1,47 @@
+{% if special %}
+  {% if HOD %}
+    <h3>{{HOD.name}}</h3>
+    <h4>
+      {{HOD.dept}}
+    </h4>
+    {%endif%}
+    {% if Dean %}
+      <h3>{{Dean.name}}</h3>
+      <h4>
+        {{Dean.dept}}
+      </h4>
+    {% endif %}
+{% else %}
+
+    <h2>Hello {{ employee_obj.name }}</h2>
+    <h3>Department: {{ dept_obj.dept_name}}</h3>
+    <div>
+    {% if role_obj.role_id is not None %}
+      <h3>Role: {{role_obj.role_name}}</h3>
+    {% endif %}
+    <h3>Type: {{employee_obj.type}}</h3>
+    <h3>Join Date: {{employee_obj.join_date}}</h3>
+    <h3>Email: {{employee_obj.employee_email}}</h3>
+    <h3></h3>
+    <h3>Total Number of leaves availabe this year: {{ employee_obj.leaves_this_year }}</h3>
+    <h3>Total Number of leaves availabe next year: {{ employee_obj.leaves_next_year }}</h3>
+
+    </div>
+
+    <div>
+
+        <button class="btn btn-primary" onclick="genPaySlip();"> Generate Pay Slip</button>
+    </div>
+    <div>
+<h4>Your Leave Request Status {{employee.leave.status }} </h4>
+
+<h4>Cancel leave request! if not approved | remind the leave approver </h4>
+
+        <button class="btn btn-primary" onclick="genPaySlip();"> Request New Leave</button>
+
+
+    </div>
+
+    <a class="btn btn-primary" href="{% url 'employee_portal:logout' %}"> Logout</a>
+
+{% endif%}
