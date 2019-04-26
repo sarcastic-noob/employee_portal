@@ -10,10 +10,6 @@ from django.template import RequestContext
 from django.urls import reverse
 from .models import *
 
-
-# class HomepageView(TemplateView):
-#     template_name = 'emp/login.html'
-
 def index(request):
     template = loader.get_template('emp/login.html')
     context = {}
@@ -77,3 +73,16 @@ def logout_user(request):
 	if request.session.has_key('employee_id'):
 		del request.session['employee_id']
 	return redirect('/employee_portal')
+
+
+def leave_request_form(request):
+    if request.session.has_key('employee_id'):
+        employee_id=request.session['employee_id']
+        context={}
+        template = loader.get_template('emp/leave_request_form.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('/employee_portal/')
+
+def submit_leave_request(request):
+    return redirect('/employee_portal/')

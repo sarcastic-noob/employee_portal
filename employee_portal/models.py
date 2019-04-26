@@ -35,7 +35,7 @@ class employees(models.Model) :
     password=models.CharField(max_length=50,default="abcdefgh")
     employee_email=models.CharField(max_length=100, default="")
     def __str__(self):
-        return self.name
+        return self.employee_id
 
 
 

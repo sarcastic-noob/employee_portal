@@ -37,11 +37,12 @@
 
 <h4>Cancel leave request! if not approved | remind the leave approver </h4>
 
-        <button class="btn btn-primary" onclick="genPaySlip();"> Request New Leave</button>
+        <a class="btn btn-primary" href="{% url 'employee_portal:leave_request_form'%}""> Request New Leave</a>
 
 
     </div>
 
+    <h3></h3>
 
     <a class="btn btn-primary" href="{% url 'employee_portal:logout' %}"> Logout</a>
 
@@ -49,8 +50,3 @@
 
 
     <h3></h3>
-
-
-
-
-}
