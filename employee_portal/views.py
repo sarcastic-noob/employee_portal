@@ -145,6 +145,7 @@ def pay_slip_form(request):
 
 
 def pay_slip_request(request):
+    template = loader.get_template('emp/payslip.html')
     if request.session.has_key('employee_id'):
         employee_id = request.session['employee_id']
         if request.method=="GET":
@@ -152,34 +153,28 @@ def pay_slip_request(request):
             print("idhar dekh")
             print(Month)
             print("idhar dekh")
-            if Month is None:
+            if not Month:
                 context = {
                     'error_message': 'Month cannot be empty'
                 }
                 return redirect('/employee_portal/pay_slip_form')
 
-            # employee_obj=employees.objects.get(employee_id=employee_id)
-            # status_obj=leave_request_status.objects.get(type=employee_obj.type, stage=1)
-            # # curr_status=None
-            # # for status_obj in status_objs:
-            # #     if status_obj.stage==1:
-            # #         curr_status=status_obj
-            # leaveRequest = leave_request()
-            # leaveRequest.employee_id=employee_obj
-            # leaveRequest.status_id=status_obj
-            # leaveRequest.startDate=startDate
-            # leaveRequest.endDate=endDate
-            # leaveRequest.reason=reason
-            # leaveRequest.save()
-            # print("leave request id = " + str(leaveRequest))
-            # leaveRequestObj = leave_request.objects.get(request_id=leaveRequest.request_id)
-            # comment=comments()
-            # comment.request_id=leaveRequestObj
-            # comment.comment_by=employee_obj
-            # comment.comment=reason
-            # comment.approvalStatus="Pending"
-            # comment.save()
+            employee_obj=employees.objects.get(employee_id=employee_id)
+            pay_slip_obj=pay_slip.objects.get(employee_id=employee_obj.employee_id, month_and_year=Month)
 
-        return redirect('/employee_portal/')
+            total=pay_slip_obj.total
+            pay=pay_slip_obj.pay
+            bonus=pay_slip_obj.bonus
+
+
+            # if pay_slip_obj is None:
+            #     context = {
+            #         'error_message': 'Pay slip not found'
+            #     }
+            #     return redirect('/employee_portal/pay_slip_form')
+            context={
+            'pay_slip_obj':pay_slip_obj
+            }
+        return HttpResponse(template.render(context,request))
     else:
         return redirect('/employee_portal/')

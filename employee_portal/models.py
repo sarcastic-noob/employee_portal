@@ -62,7 +62,7 @@ class bonus_request(models.Model):
     role_id=models.ForeignKey(roles,on_delete=models.CASCADE)
     type=models.ForeignKey(type, on_delete=models.CASCADE)
     month_year=models.CharField(max_length=25)
-    bonus=models.DecimalField(decimal_places=3,max_digits = 5)
+    bonus=models.IntegerField()
     status=models.CharField(max_length=10)
     class Meta:
             unique_together=('role_id','month_year')
@@ -83,8 +83,8 @@ class pay_slip(models.Model):
     employee_id=models.ForeignKey(employees, on_delete=models.CASCADE )
     month_and_year=models.CharField(max_length=25)
     pay=models.ForeignKey(cfti_matrix, on_delete=models.CASCADE)
-    bonus=models.DecimalField(decimal_places=3,max_digits = 10)
-    total=models.DecimalField(decimal_places=3,max_digits = 10)
+    bonus=models.IntegerField()
+    total=models.IntegerField()
     class Meta:
             unique_together=('employee_id','month_and_year')
     def __str__(self):
