@@ -131,3 +131,55 @@ def submit_leave_request(request):
         return redirect('/employee_portal/')
     else:
         return redirect('/employee_portal/')
+
+
+
+def pay_slip_form(request):
+    if request.session.has_key('employee_id'):
+        employee_id=request.session['employee_id']
+        context={}
+        template = loader.get_template('emp/pay_slip_form.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('/employee_portal/')
+
+
+def pay_slip_request(request):
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        if request.method=="GET":
+            Month = request.GET['Month']
+            print("idhar dekh")
+            print(Month)
+            print("idhar dekh")
+            if Month is None:
+                context = {
+                    'error_message': 'Month cannot be empty'
+                }
+                return redirect('/employee_portal/pay_slip_form')
+
+            # employee_obj=employees.objects.get(employee_id=employee_id)
+            # status_obj=leave_request_status.objects.get(type=employee_obj.type, stage=1)
+            # # curr_status=None
+            # # for status_obj in status_objs:
+            # #     if status_obj.stage==1:
+            # #         curr_status=status_obj
+            # leaveRequest = leave_request()
+            # leaveRequest.employee_id=employee_obj
+            # leaveRequest.status_id=status_obj
+            # leaveRequest.startDate=startDate
+            # leaveRequest.endDate=endDate
+            # leaveRequest.reason=reason
+            # leaveRequest.save()
+            # print("leave request id = " + str(leaveRequest))
+            # leaveRequestObj = leave_request.objects.get(request_id=leaveRequest.request_id)
+            # comment=comments()
+            # comment.request_id=leaveRequestObj
+            # comment.comment_by=employee_obj
+            # comment.comment=reason
+            # comment.approvalStatus="Pending"
+            # comment.save()
+
+        return redirect('/employee_portal/')
+    else:
+        return redirect('/employee_portal/')

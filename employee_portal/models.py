@@ -79,6 +79,18 @@ class cfti_matrix(models.Model):
             return str(self.pay)
 
 
+class pay_slip(models.Model):
+    employee_id=models.ForeignKey(employees, on_delete=models.CASCADE )
+    month_and_year=models.CharField(max_length=25)
+    pay=models.ForeignKey(cfti_matrix, on_delete=models.CASCADE)
+    bonus=models.DecimalField(decimal_places=3,max_digits = 10)
+    total=models.DecimalField(decimal_places=3,max_digits = 10)
+    class Meta:
+            unique_together=('employee_id','month_and_year')
+    def __str__(self):
+            return str(self.total)
+
+
 class leave_request_status(models.Model):
     status_id=models.IntegerField(primary_key=True)
     withAuth=models.CharField(max_length=25)

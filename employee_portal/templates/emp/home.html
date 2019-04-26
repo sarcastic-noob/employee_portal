@@ -41,10 +41,12 @@
 
 
 <div>
-  <h3>Please select the year and month to generate pay slip</h3>
-  <input type="month" id="myMonth" value="2019-04">
 
-  <button onclick=genPaySlip();">Generate pay slip</button>
+  <div>
+
+<a class="btn btn-primary" href="{% url 'employee_portal:pay_slip_form' %}">Generate pay Slip</a>
+    </div>
+
 
 </div>
 
