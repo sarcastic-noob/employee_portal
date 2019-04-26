@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import*
 
 admin.site.register(department)
+admin.site.register(type)
 admin.site.register(roles)
 admin.site.register(employees)
 admin.site.register(department_roles)
@@ -15,6 +16,6 @@ admin.site.register(project_budget)
 admin.site.register(expenditure)
 admin.site.register(tee_request)
 admin.site.register(hiring_request)
-
-
+admin.site.register(leave_request_status)
+admin.site.register(comments)
 # Register your models here.

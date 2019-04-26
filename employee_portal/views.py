@@ -85,4 +85,49 @@ def leave_request_form(request):
         return redirect('/employee_portal/')
 
 def submit_leave_request(request):
-    return redirect('/employee_portal/')
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        if request.method=="POST":
+            startDate = request.POST['startDate']
+            endDate = request.POST['endDate']
+            reason = request.POST['reason']
+            if startDate is None:
+                context = {
+                    'error_message': 'Start Date cannot be empty'
+                }
+                return redirect('/employee_portal/leave_request_form')
+            if endDate is None:
+                context = {
+                    'error_message': 'End Date cannot be empty'
+                }
+                return redirect('/employee_portal/leave_request_form')
+            if reason is None:
+                context = {
+                    'error_message': 'Reason cannot be empty'
+                }
+                return redirect('/employee_portal/leave_request_form')
+            employee_obj=employees.objects.get(employee_id=employee_id)
+            status_obj=leave_request_status.objects.get(type=employee_obj.type, stage=1)
+            # curr_status=None
+            # for status_obj in status_objs:
+            #     if status_obj.stage==1:
+            #         curr_status=status_obj
+            leaveRequest = leave_request()
+            leaveRequest.employee_id=employee_obj
+            leaveRequest.status_id=status_obj
+            leaveRequest.startDate=startDate
+            leaveRequest.endDate=endDate
+            leaveRequest.reason=reason
+            leaveRequest.save()
+            print("leave request id = " + str(leaveRequest))
+            leaveRequestObj = leave_request.objects.get(request_id=leaveRequest.request_id)
+            comment=comments()
+            comment.request_id=leaveRequestObj
+            comment.comment_by=employee_obj
+            comment.comment=reason
+            comment.approvalStatus="Pending"
+            comment.save()
+
+        return redirect('/employee_portal/')
+    else:
+        return redirect('/employee_portal/')
