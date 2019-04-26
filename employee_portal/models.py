@@ -29,13 +29,7 @@ class roles(models.Model):
    		return self.role_name
 
 
-class leave_request_status(models.Model):
-    status_id=models.IntegerField(primary_key=True)
-    withAuth=models.CharField(max_length=25)
-    type=models.ForeignKey(type, on_delete=models.CASCADE)
-    stage=models.IntegerField(default=1)
-    def __str__(self):
-   		return str(self.status_id)
+
 
 class employees(models.Model) :
     employee_id=models.CharField(max_length=25,primary_key=True)
@@ -85,6 +79,14 @@ class cfti_matrix(models.Model):
             return str(self.pay)
 
 
+class leave_request_status(models.Model):
+    status_id=models.IntegerField(primary_key=True)
+    withAuth=models.CharField(max_length=25)
+    type=models.ForeignKey(type, on_delete=models.CASCADE)
+    stage=models.IntegerField(default=1)
+    def __str__(self):
+   		return str(self.status_id)
+
 class leave_request(models.Model):
     request_id=models.AutoField(primary_key=True)
     employee_id=models.ForeignKey(employees,on_delete=models.CASCADE)
@@ -95,6 +97,11 @@ class leave_request(models.Model):
 
     def __str__(self):
    		return str(self.request_id)
+
+
+
+
+
 
 class comments(models.Model):
     comment_id=models.AutoField(primary_key=True)

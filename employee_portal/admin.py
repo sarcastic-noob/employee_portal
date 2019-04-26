@@ -16,6 +16,7 @@ admin.site.register(project_budget)
 admin.site.register(expenditure)
 admin.site.register(tee_request)
 admin.site.register(hiring_request)
-admin.site.register(leave_request_status)
 admin.site.register(comments)
+admin.site.register(leave_request_status)
+
 # Register your models here.
