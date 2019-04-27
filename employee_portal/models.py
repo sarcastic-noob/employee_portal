@@ -92,6 +92,7 @@ class leave_request(models.Model):
     startDate=models.DateTimeField(default="")
     endDate=models.DateTimeField(default="")
     reason=models.CharField(max_length=500)
+    approvalStatus=models.CharField(max_length=500)
 
     def __str__(self):
    		return str(self.request_id)
@@ -102,7 +103,7 @@ class comments(models.Model):
     comment_by=models.ForeignKey(employees, on_delete=models.CASCADE)
     timestamp=models.DateTimeField(auto_now=True)
     comment=models.CharField(max_length=500)
-    approvalStatus=models.CharField(max_length=500)
+    approvalStatus=models.CharField(max_length=500, default="Pending")
 
     def __str__(self):
         return str(self.comment_id)

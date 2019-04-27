@@ -63,7 +63,20 @@ def home(request):
         role_id = employee_obj.role_id
         dept_obj = department.objects.get(dept_name = dept_id)
         role_obj = roles.objects.get(role_name = role_id)
-        context = {'employee_obj':employee_obj, 'dept_obj': dept_obj}
+        leave_requests = list(leave_request.objects.filter(employee_id=employee_obj))
+        context = {'employee_obj':employee_obj,
+            'dept_obj': dept_obj,
+            'leave_requests':leave_requests,
+            'role_obj':role_obj
+            }
+        if int(employee_obj.role_id.role_id)>1:
+            incoming_requests=list(leave_request.objects.filter(status_id=int(employee_obj.role_id.role_id)-1))
+            context = {'employee_obj':employee_obj,
+                'dept_obj': dept_obj,
+                'leave_requests':leave_requests,
+                'role_obj':role_obj,
+                'incoming_requests':incoming_requests
+                }
         return HttpResponse(template.render(context,request))
     else:
         return redirect('/employee_portal/')
@@ -107,17 +120,15 @@ def submit_leave_request(request):
                 }
                 return redirect('/employee_portal/leave_request_form')
             employee_obj=employees.objects.get(employee_id=employee_id)
-            status_obj=leave_request_status.objects.get(type=employee_obj.type, stage=1)
-            # curr_status=None
-            # for status_obj in status_objs:
-            #     if status_obj.stage==1:
-            #         curr_status=status_obj
+            stage = employee_obj.role_id.role_id
+            status_obj=leave_request_status.objects.get(type=employee_obj.type, stage=stage)
             leaveRequest = leave_request()
             leaveRequest.employee_id=employee_obj
             leaveRequest.status_id=status_obj
             leaveRequest.startDate=startDate
             leaveRequest.endDate=endDate
             leaveRequest.reason=reason
+            leaveRequest.approvalStatus="Pending"
             leaveRequest.save()
             print("leave request id = " + str(leaveRequest))
             leaveRequestObj = leave_request.objects.get(request_id=leaveRequest.request_id)
@@ -128,6 +139,79 @@ def submit_leave_request(request):
             comment.approvalStatus="Pending"
             comment.save()
 
+        return redirect('/employee_portal/')
+    else:
+        return redirect('/employee_portal/')
+
+
+def view_comments(request):
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        request_id = request.GET.get('request_id')
+        request_obj = leave_request.objects.get(request_id=request_id)
+        comments_objs = list(comments.objects.filter(request_id=request_id))
+        context={'comments_objs':comments_objs, 'request_obj':request_obj}
+        template=loader.get_template('emp/view_comments.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('/employee_portal/')
+
+def approve(request):
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        request_id = request.GET.get('request_id')
+        request_obj = leave_request.objects.get(request_id=request_id)
+        status_id = request_obj.status_id
+        if status_id.status_id == 3:
+            request_obj.approvalStatus="Approved"
+            request_obj.save()
+            employee_obj = employees.objects.get(employee_id = request_obj.employee_id)
+            if employee_obj.leaves_this_year>0:
+                employee_obj.leaves_this_year = employee_obj.leaves_this_year-1
+            else:
+                employee_obj.leaves_next_year = employee_obj.leaves_next_year-1
+            employee_obj.save()
+            return redirect('/employee_portal/')
+        new_status_id = status_id.status_id+1
+        status_obj = leave_request_status.objects.get(status_id=new_status_id)
+        request_obj.status_id=status_obj
+        request_obj.save()
+        return redirect('/employee_portal/')
+
+    else:
+        return redirect('/employee_portal/')
+def decline(request):
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        request_id = request.GET.get('request_id')
+        request_obj = leave_request.objects.get(request_id=request_id)
+        status_id = request_obj.status_id
+        request_obj.approvalStatus="Declined"
+        request_obj.save()
+        return redirect('/employee_portal/')
+    else:
+        return redirect('/employee_portal/')
+
+def add_comments(request):
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        request_id = request.GET.get('request_id')
+        context={'request_id': request_id}
+        template = loader.get_template('emp/add_comments_form.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('/employee_portal/')
+
+def submit_comment(request):
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        if request.method=="POST":
+            comment=request.POST['comment']
+            comment_obj = comments()
+            comment_obj.comment = comment
+            comment_obj.comment_by = employees.objects.get(employee_id=employee_id)
+            comment_obj.request_id = leave_request.objects.get(request_id=request.POST['request_id'])
+            comment_obj.save()
         return redirect('/employee_portal/')
     else:
         return redirect('/employee_portal/')

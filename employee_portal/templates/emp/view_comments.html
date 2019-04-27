@@ -1,0 +1,23 @@
+<h4>Comments of your request: </h4>
+<h3>Request_id: {{request_obj.request_id}}</h3>
+<table>
+<tr>
+  <th>comment_id</th>
+  <th>comment_by</th>
+  <th>Type</th>
+  <th>timestamp</th>
+  <th>comment</th>
+  <th>approvalStatus</th>
+</tr>
+{% for r in comments_objs %}
+<tr>
+  <th> {{ r.comment_id }}</th>
+  <th> {{ r.comment_by.name}}</th>
+  <th> {{r.comment_by.type}}</th>
+  <th> {{ r.timestamp }}</th>
+  <th> {{ r.comment }}</th>
+  <th> {{ r.approvalStatus }}</th>
+
+</tr>
+{% endfor %}
+</table>
