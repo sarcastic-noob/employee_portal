@@ -19,6 +19,6 @@ admin.site.register(hiring_request)
 admin.site.register(comments)
 admin.site.register(leave_request_status)
 admin.site.register(pay_slip)
-
+admin.site.register(reg_special)
 
 # Register your models here.

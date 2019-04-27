@@ -28,7 +28,11 @@ class roles(models.Model):
     def __str__(self):
    		return self.role_name
 
-
+class reg_special(models.Model):
+    username = models.CharField(max_length=20,primary_key=True)
+    password=models.CharField(max_length=20,default='jnvktmdak003')
+    def __str__(self):
+        return self.username
 
 
 class employees(models.Model) :
@@ -85,8 +89,8 @@ class pay_slip(models.Model):
     pay=models.ForeignKey(cfti_matrix, on_delete=models.CASCADE)
     bonus=models.IntegerField()
     total=models.IntegerField()
-    class Meta:
-            unique_together=('employee_id','month_and_year')
+    # class Meta:
+    #         unique_together=('employee_id','month_and_year')
     def __str__(self):
             return str(self.total)
 
