@@ -1,0 +1,63 @@
+
+{% if special %}
+  {% if HOD %}
+    <h3>{{HOD.name}}</h3>
+    <h4>
+      {{HOD.dept}}
+    </h4>
+    {%endif%}
+    {% if Dean %}
+      <h3>{{Dean.name}}</h3>
+      <h4>
+        {{Dean.dept}}
+      </h4>
+    {% endif %}
+{% else %}
+
+
+<div class="container">
+  <h2>Pay Slip table</h2>
+  <p></p>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Pay</th>
+        <th>Bonus</th>
+        <th>Total Salary</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{pay_slip_obj.month_and_year}}</td>
+        <td>{{pay_slip_obj.pay}}</td>
+        <td>{{pay_slip_obj.bonus}}</td>
+        <td>{{pay_slip_obj.total}}</td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
+
+
+    {% if role_obj.role_id is not None %}
+      <h3>Role: {{role_obj.role_name}}</h3>
+    {% endif %}
+
+
+
+
+
+
+
+
+    </div>
+
+    <h3></h3>
+<a class="btn btn-primary" href="{% url 'employee_portal:home' %}"> Home</a>
+    <a class="btn btn-primary" href="{% url 'employee_portal:logout' %}"> Logout</a>
+
+{% endif%}
+
+
+    <h3></h3>

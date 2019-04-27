@@ -15,7 +15,6 @@
 
     <div>
 
-        <button class="btn btn-primary" onclick="genPaySlip();"> Generate Pay Slip</button>
     </div>
     <div>
 <h4>Your Leave Request Status: </h4>
@@ -75,6 +74,23 @@
 </table>
 {% endif %}
     <a class="btn btn-primary" href="{% url 'employee_portal:leave_request_form'%}"> Request New Leave</a>
+=======
+
+        <a class="btn btn-primary" href="{% url 'employee_portal:leave_request_form'%}""> Request New Leave</a>
+
+
+<div>
+
+  <div>
+
+<a class="btn btn-primary" href="{% url 'employee_portal:pay_slip_form' %}">Generate pay Slip</a>
+    </div>
+
+
+</div>
+
+
+
 
 
     </div>

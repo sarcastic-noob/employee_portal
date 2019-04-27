@@ -37,26 +37,26 @@
 </div>
 
 <div class="col-md-8">
-<h2>Welcome to employee management portal IIT Ropar</h2>
+<h2>Welcome Registrar </h2>
   <div class="wrapper fadeInDown">
     <div id="formContent">
       <!-- Tabs Titles -->
 
       <!-- Icon -->
       <div class="fadeIn first">
-      <img src="{% static "images/pp.jpeg" %}" alt="My image" height="30%" width="50%">
+
       </div>
 
       <!-- Login Form -->
-      <form role="form" action="{% url 'employee_portal:login'%}" method="post" enctype="multipart/form-data">
+      <form role="form" action="{% url 'employee_portal:register_login'%}" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
-        <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
+        <input type="text" id="reg_username" class="fadeIn second" name="reg_username" placeholder="username">
+        <input type="password" id="reg_password" class="fadeIn third" name="reg_password" placeholder="password">
         <input type="submit" class="fadeIn fourth" value="Log In">
       </form>
 
       <!-- Remind Passowrd -->
-    
+
 
     </div>
   </div>

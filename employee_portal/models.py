@@ -28,14 +28,12 @@ class roles(models.Model):
     def __str__(self):
    		return self.role_name
 
-
-class leave_request_status(models.Model):
-    status_id=models.IntegerField(primary_key=True)
-    withAuth=models.CharField(max_length=25)
-    type=models.ForeignKey(type, on_delete=models.CASCADE)
-    stage=models.IntegerField(default=1)
+class reg_special(models.Model):
+    username = models.CharField(max_length=20,primary_key=True)
+    password=models.CharField(max_length=20,default='jnvktmdak003')
     def __str__(self):
-   		return str(self.status_id)
+        return self.username
+
 
 class employees(models.Model) :
     employee_id=models.CharField(max_length=25,primary_key=True)
@@ -68,7 +66,7 @@ class bonus_request(models.Model):
     role_id=models.ForeignKey(roles,on_delete=models.CASCADE)
     type=models.ForeignKey(type, on_delete=models.CASCADE)
     month_year=models.CharField(max_length=25)
-    bonus=models.DecimalField(decimal_places=3,max_digits = 5)
+    bonus=models.IntegerField()
     status=models.CharField(max_length=10)
     class Meta:
             unique_together=('role_id','month_year')
@@ -85,6 +83,26 @@ class cfti_matrix(models.Model):
             return str(self.pay)
 
 
+class pay_slip(models.Model):
+    employee_id=models.ForeignKey(employees, on_delete=models.CASCADE )
+    month_and_year=models.CharField(max_length=25)
+    pay=models.ForeignKey(cfti_matrix, on_delete=models.CASCADE)
+    bonus=models.IntegerField()
+    total=models.IntegerField()
+    # class Meta:
+    #         unique_together=('employee_id','month_and_year')
+    def __str__(self):
+            return str(self.total)
+
+
+class leave_request_status(models.Model):
+    status_id=models.IntegerField(primary_key=True)
+    withAuth=models.CharField(max_length=25)
+    type=models.ForeignKey(type, on_delete=models.CASCADE)
+    stage=models.IntegerField(default=1)
+    def __str__(self):
+   		return str(self.status_id)
+
 class leave_request(models.Model):
     request_id=models.AutoField(primary_key=True)
     employee_id=models.ForeignKey(employees,on_delete=models.CASCADE)
@@ -96,6 +114,11 @@ class leave_request(models.Model):
 
     def __str__(self):
    		return str(self.request_id)
+
+
+
+
+
 
 class comments(models.Model):
     comment_id=models.AutoField(primary_key=True)

@@ -18,6 +18,50 @@ def index(request):
     return HttpResponse(template.render(context,request))
 
 
+
+def registrarloginpage(request):
+    template = loader.get_template('emp/registrar.html')
+    context={}
+    return HttpResponse(template.render(context,request))
+
+#iamregistrar
+def register_login(request):
+    print("lolwa")
+    if request.method == 'POST':
+        reg_username=request.POST['reg_username']
+        reg_password=request.POST['reg_password']
+        if reg_username is not None:
+            if reg_special.objects.filter(username = reg_username).exists():
+                reg_special_obj = reg_special.objects.get(username = reg_username)
+                if reg_special_obj is None:
+                    context = {'error_message': 'Invalid login'}
+                    template = loader.get_template('emp/registrar.html')
+                    return HttpResponse(template.render(context, request))
+                elif reg_special_obj is not None:
+                    if reg_special_obj.password == reg_password:
+                        return redirect('/employee_portal/registrar_home')
+                    else:
+                        context = {'error_message': 'Invalid login'}
+                        template = loader.get_template('emp/registrar.html')
+                        return HttpResponse(template.render(context, request))
+                else:
+                    context = {'error_message': 'Invalid login'}
+                    template = loader.get_template('emp/registrar.html')
+                    return HttpResponse(template.render(context, request))
+            else:
+                context = {'error_message': 'Invalid login'}
+                template = loader.get_template('emp/registrar.html')
+                return HttpResponse(template.render(context, request))
+    return redirect('/registrar_home/')
+
+
+def send_payment_form(request):
+    context={}
+    template = loader.get_template('emp/send_payment_form.html')
+    return HttpResponse(template.render(context, request))
+
+
+
 def login_user(request):
 	if request.session.has_key('employee_id'):
 		return home(request)
@@ -80,6 +124,13 @@ def home(request):
         return HttpResponse(template.render(context,request))
     else:
         return redirect('/employee_portal/')
+
+
+def registrar_home(request):
+        template = loader.get_template('emp/registrar_home.html')
+        context={}
+        return HttpResponse(template.render(context,request))
+
 
 
 def logout_user(request):
@@ -152,6 +203,12 @@ def view_comments(request):
         comments_objs = list(comments.objects.filter(request_id=request_id))
         context={'comments_objs':comments_objs, 'request_obj':request_obj}
         template=loader.get_template('emp/view_comments.html')
+
+def pay_slip_form(request):
+    if request.session.has_key('employee_id'):
+        employee_id=request.session['employee_id']
+        context={}
+        template = loader.get_template('emp/pay_slip_form.html')
         return HttpResponse(template.render(context, request))
     else:
         return redirect('/employee_portal/')
@@ -215,3 +272,74 @@ def submit_comment(request):
         return redirect('/employee_portal/')
     else:
         return redirect('/employee_portal/')
+
+def pay_slip_request(request):
+    template = loader.get_template('emp/payslip.html')
+    if request.session.has_key('employee_id'):
+        employee_id = request.session['employee_id']
+        if request.method=="GET":
+            Month = request.GET['Month']
+            if not Month:
+                context = {
+                    'error_message': 'Month cannot be empty'
+                }
+                return redirect('/employee_portal/pay_slip_form')
+
+            employee_obj=employees.objects.get(employee_id=employee_id)
+            pay_slip_obj=pay_slip.objects.get(employee_id=employee_obj.employee_id, month_and_year=Month)
+
+            total=pay_slip_obj.total
+            pay=pay_slip_obj.pay
+            bonus=pay_slip_obj.bonus
+
+
+            # if pay_slip_obj is None:
+            #     context = {
+            #         'error_message': 'Pay slip not found'
+            #     }
+            #     return redirect('/employee_portal/pay_slip_form')
+            context={
+            'pay_slip_obj':pay_slip_obj
+            }
+        return HttpResponse(template.render(context,request))
+    else:
+        return redirect('/employee_portal/')
+
+def payment_request(request):
+    template = loader.get_template('emp/registrar_home.html')
+    if request.method=="POST":
+        year_month=request.POST['year_month']
+        pay=request.POST['pay']
+        bonus=request.POST['bonus']
+        id=request.POST['id']
+        total=int(pay)+int(bonus)
+        employee_obj = employees.objects.get(employee_id = id)
+        cfti_matrix_obj = cfti_matrix.objects.get(pay=pay)
+        print("uqEHFBEIRVGIWUHFAvujfbpIUHfan[I9QEPOBUFU9pwGVBED[IUVESF]]")
+        print(employee_obj)
+        if not year_month:
+            context = {
+                'error_message': 'year and month cannot be empty'
+            }
+            return redirect('/employee_portal/send_payment_form')
+        if not pay:
+            context = {
+                'error_message': 'pay cannot be empty'
+            }
+            return redirect('/employee_portal/send_payment_form')
+        if not id:
+            context = {
+                'error_message': 'employee_id cannot be empty'
+            }
+            return redirect('/employee_portal/send_payment_form')
+
+        # pay_slip_instance = pay_slip.objects.create(employee_id=employee_obj.employee_id, month_and_year=year_month, pay=pay, bonus=bonus, total=total)
+        pay_slip_instance = pay_slip()
+        pay_slip_instance.employee_id = employee_obj
+        pay_slip_instance.year_month=year_month
+        pay_slip_instance.pay=cfti_matrix_obj
+        pay_slip_instance.bonus=bonus
+        pay_slip_instance.total=total
+        pay_slip_instance.save()
+    context={}
+    return HttpResponse(template.render(context,request))
